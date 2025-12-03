@@ -20,15 +20,15 @@
 
 ### Tasks
 
-- [ ] T001 Add SpringDoc version variable to root build.gradle.kts
-- [ ] T002 [P] Add springdoc-openapi-starter-webmvc-ui dependency to mp-service/build.gradle.kts
-- [ ] T003 [P] Add springdoc-openapi-starter-webmvc-ui dependency to gbp-service/build.gradle.kts
-- [ ] T004 [P] Add springdoc-openapi-starter-webmvc-ui dependency to gin-service/build.gradle.kts
-- [ ] T005 Run gradle build to verify no dependency conflicts
+- [x] T001 Add SpringDoc version variable to root build.gradle.kts
+- [x] T002 [P] Add springdoc-openapi-starter-webmvc-ui dependency to mp-service/build.gradle.kts
+- [x] T003 [P] Add springdoc-openapi-starter-webmvc-ui dependency to gbp-service/build.gradle.kts
+- [x] T004 [P] Add springdoc-openapi-starter-webmvc-ui dependency to gin-service/build.gradle.kts
+- [x] T005 Run gradle build to verify no dependency conflicts
 
 ### Acceptance Criteria
-- [ ] All three services compile successfully with SpringDoc dependency
-- [ ] No version conflicts in dependency resolution
+- [x] All three services compile successfully with SpringDoc dependency
+- [x] No version conflicts in dependency resolution
 
 ---
 
@@ -39,17 +39,17 @@
 
 ### Tasks
 
-- [ ] T006 [P] Add springdoc configuration to mp-service/src/main/resources/application.yml
-- [ ] T007 [P] Add springdoc configuration to gbp-service/src/main/resources/application.yml
-- [ ] T008 [P] Add springdoc configuration to gin-service/src/main/resources/application.yml
-- [ ] T009 [P] Create OpenApiConfig.java in mp-service/src/main/java/.../infrastructure/config/OpenApiConfig.java
-- [ ] T010 [P] Create OpenApiConfig.java in gbp-service/src/main/java/.../infrastructure/config/OpenApiConfig.java
-- [ ] T011 [P] Create OpenApiConfig.java in gin-service/src/main/java/.../infrastructure/config/OpenApiConfig.java
+- [x] T006 [P] Add springdoc configuration to mp-service/src/main/resources/application.yml
+- [x] T007 [P] Add springdoc configuration to gbp-service/src/main/resources/application.yml
+- [x] T008 [P] Add springdoc configuration to gin-service/src/main/resources/application.yml
+- [x] T009 [P] Create OpenApiConfig.java in mp-service/src/main/java/.../infrastructure/config/OpenApiConfig.java
+- [x] T010 [P] Create OpenApiConfig.java in gbp-service/src/main/java/.../infrastructure/config/OpenApiConfig.java
+- [x] T011 [P] Create OpenApiConfig.java in gin-service/src/main/java/.../infrastructure/config/OpenApiConfig.java
 
 ### Acceptance Criteria
-- [ ] Each service exposes /swagger-ui.html endpoint
-- [ ] Each service exposes /v3/api-docs endpoint
-- [ ] Service metadata (name, version, description) displayed correctly
+- [x] Each service exposes /swagger-ui.html endpoint
+- [x] Each service exposes /v3/api-docs endpoint
+- [x] Service metadata (name, version, description) displayed correctly
 
 ---
 
@@ -59,33 +59,33 @@
 API 使用者可透過網頁介面瀏覽 API 規格，快速了解可用的端點與請求格式
 
 ### Independent Test Criteria
-- [ ] Swagger UI 顯示所有 API 端點
-- [ ] 每個端點顯示 HTTP 方法、路徑、描述
-- [ ] 服務資訊（名稱、版本、描述）正確顯示
+- [x] Swagger UI 顯示所有 API 端點
+- [x] 每個端點顯示 HTTP 方法、路徑、描述
+- [x] 服務資訊（名稱、版本、描述）正確顯示
 
 ### Tasks
 
 #### mp-service API Annotations
 
-- [ ] T012 [P] [US1] Add @Tag annotation to ProcessController in mp-service/src/main/java/.../adapter/in/rest/ProcessController.java
-- [ ] T013 [P] [US1] Add @Operation and @ApiResponses to GET /api/process endpoint in mp-service
-- [ ] T014 [P] [US1] Add @Operation and @ApiResponses to GET /api/status endpoint in mp-service
-- [ ] T015 [P] [US1] Add @Schema annotations to ProcessResponse DTO in mp-service/src/main/java/.../adapter/in/rest/dto/ProcessResponse.java
-- [ ] T016 [P] [US1] Add @Schema annotations to StatusResponse DTO in mp-service/src/main/java/.../adapter/in/rest/dto/StatusResponse.java
-- [ ] T017 [P] [US1] Add @Schema annotations to ErrorResponse DTO in mp-service/src/main/java/.../adapter/in/rest/dto/ErrorResponse.java
+- [x] T012 [P] [US1] Add @Tag annotation to ProcessController in mp-service/src/main/java/.../adapter/in/rest/ProcessController.java
+- [x] T013 [P] [US1] Add @Operation and @ApiResponses to GET /api/process endpoint in mp-service
+- [x] T014 [P] [US1] Add @Operation and @ApiResponses to GET /api/status endpoint in mp-service
+- [x] T015 [P] [US1] Add @Schema annotations to ProcessResponse DTO in mp-service/src/main/java/.../adapter/in/rest/dto/ProcessResponse.java
+- [x] T016 [P] [US1] Add @Schema annotations to StatusResponse DTO in mp-service/src/main/java/.../adapter/in/rest/dto/StatusResponse.java
+- [x] T017 [P] [US1] Add @Schema annotations to ErrorResponse DTO in mp-service/src/main/java/.../adapter/in/rest/dto/ErrorResponse.java
 
 #### gbp-service API Annotations
 
-- [ ] T018 [P] [US1] Add @Tag annotation to TimeController in gbp-service/src/main/java/.../adapter/in/rest/TimeController.java
-- [ ] T019 [P] [US1] Add @Operation and @ApiResponses to GET /api/time endpoint in gbp-service
-- [ ] T020 [P] [US1] Add @Schema annotations to TimeResponse DTO in gbp-service/src/main/java/.../adapter/in/rest/dto/TimeResponse.java
+- [x] T018 [P] [US1] Add @Tag annotation to TimeController in gbp-service/src/main/java/.../adapter/in/rest/TimeController.java
+- [x] T019 [P] [US1] Add @Operation and @ApiResponses to GET /api/time endpoint in gbp-service
+- [x] T020 [P] [US1] Add @Schema annotations to TimeResponse DTO in gbp-service/src/main/java/.../adapter/in/rest/dto/TimeResponse.java
 
 #### gin-service API Annotations
 
-- [ ] T021 [P] [US1] Add @Tag annotation to TimeController in gin-service/src/main/java/.../adapter/in/rest/TimeController.java
-- [ ] T022 [P] [US1] Add @Operation and @ApiResponses to POST /api/time endpoint in gin-service
-- [ ] T023 [P] [US1] Add @Schema annotations to TimeRequest DTO in gin-service/src/main/java/.../adapter/in/rest/dto/TimeRequest.java
-- [ ] T024 [P] [US1] Add @Schema annotations to AckResponse DTO in gin-service/src/main/java/.../adapter/in/rest/dto/AckResponse.java
+- [x] T021 [P] [US1] Add @Tag annotation to TimeController in gin-service/src/main/java/.../adapter/in/rest/TimeController.java
+- [x] T022 [P] [US1] Add @Operation and @ApiResponses to POST /api/time endpoint in gin-service
+- [x] T023 [P] [US1] Add @Schema annotations to TimeRequest DTO in gin-service/src/main/java/.../adapter/in/rest/dto/TimeRequest.java
+- [x] T024 [P] [US1] Add @Schema annotations to AckResponse DTO in gin-service/src/main/java/.../adapter/in/rest/dto/AckResponse.java
 
 ---
 
@@ -228,14 +228,14 @@ Phase 1 + Phase 2 + Phase 3 (US1)
 
 | Phase | Total | Done | In Progress |
 |-------|-------|------|-------------|
-| Phase 1: Setup | 5 | 0 | 0 |
-| Phase 2: Foundational | 6 | 0 | 0 |
-| Phase 3: US1 Browse | 13 | 0 | 0 |
+| Phase 1: Setup | 5 | 5 | 0 |
+| Phase 2: Foundational | 6 | 6 | 0 |
+| Phase 3: US1 Browse | 13 | 13 | 0 |
 | Phase 4: US2 Test | 4 | 0 | 0 |
 | Phase 5: US3 Export | 4 | 0 | 0 |
 | Phase 6: Tests | 7 | 0 | 0 |
 | Phase 7: Polish | 5 | 0 | 0 |
-| **TOTAL** | **44** | **0** | **0** |
+| **TOTAL** | **44** | **24** | **0** |
 
 ---
 
