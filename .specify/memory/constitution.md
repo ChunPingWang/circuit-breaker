@@ -1,9 +1,16 @@
 <!--
 Sync Impact Report
 ==================
-Version change: N/A → 1.0.0 (Initial creation)
+Version change: 1.0.0 → 1.1.0
 
-Added Principles:
+Updated Principles:
+- P6: Framework Isolation → Framework Isolation & Hexagonal Architecture
+  - Added architecture layers diagram
+  - Added dependency direction rules (Infrastructure → Application → Domain)
+  - Added port interface location rules
+  - Expanded rationale to include hexagonal architecture benefits
+
+Previous Version (1.0.0):
 - P1: Code Quality Excellence
 - P2: Testing Standards
 - P3: Behavior Driven Development
@@ -12,11 +19,6 @@ Added Principles:
 - P6: Framework Isolation
 - P7: User Experience Consistency
 - P8: Performance Requirements
-
-Added Sections:
-- Preamble
-- Core Principles (8 principles)
-- Governance
 
 Templates requiring updates:
 - .specify/templates/plan-template.md (pending creation)
@@ -28,9 +30,9 @@ Follow-up TODOs: None
 
 # Circuit-Breaker Project Constitution
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Ratification Date:** 2025-12-03
-**Last Amended:** 2025-12-03
+**Last Amended:** 2025-12-04
 
 ## Preamble
 
@@ -126,10 +128,33 @@ experts, resulting in software that accurately models business processes.
 **Rationale:** SOLID principles produce loosely coupled, highly cohesive code that
 is easier to maintain, test, and extend.
 
-### Principle 6: Framework Isolation
+### Principle 6: Framework Isolation & Hexagonal Architecture
 
 **Statement:** Frameworks and external dependencies MUST be confined to the
-infrastructure layer.
+infrastructure layer. Dependencies MUST flow inward (Infrastructure → Application → Domain).
+
+**Architecture Layers:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Infrastructure Layer (外層)                   │
+│  Controllers, Repositories Impl, HTTP Clients, Schedulers       │
+│                           │                                      │
+│                           │ depends on / implements              │
+│                           ▼                                      │
+├─────────────────────────────────────────────────────────────────┤
+│                    Application Layer (中層)                      │
+│  Use Cases, Input Ports, Output Port Interfaces                 │
+│                           │                                      │
+│                           │ depends on                           │
+│                           ▼                                      │
+├─────────────────────────────────────────────────────────────────┤
+│                      Domain Layer (核心)                         │
+│  Entities, Value Objects, Domain Services, Domain Events        │
+│                                                                  │
+│  ⚠️ Domain MUST NOT depend on any outer layer                    │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 **Non-Negotiable Rules:**
 - Domain and application layers MUST NOT import framework-specific code
@@ -140,8 +165,22 @@ infrastructure layer.
 - Core business logic MUST remain framework-agnostic and portable
 - Dependency injection MUST be configured at composition root only
 
+**Dependency Direction Rules (Hexagonal Architecture):**
+- ✅ Infrastructure MUST depend on Application and Domain (outer depends on inner)
+- ✅ Application MUST depend on Domain only
+- ❌ Domain MUST NOT depend on Application (prohibited)
+- ❌ Domain MUST NOT depend on Infrastructure (prohibited)
+- ❌ Application MUST NOT depend on Infrastructure (prohibited)
+
+**Port Interface Location Rules:**
+- Input Ports (Use Case interfaces): MUST be defined in Application layer
+- Output Ports (Repository, Gateway interfaces): MUST be defined in Domain layer
+- Infrastructure layer MUST implement Output Port interfaces defined in Domain
+
 **Rationale:** Framework isolation protects core business logic from framework
-churn, enables technology upgrades, and improves testability.
+churn, enables technology upgrades, and improves testability. The hexagonal
+architecture ensures that domain logic remains pure and independent of technical
+concerns, making the system more maintainable and adaptable to change.
 
 ### Principle 7: User Experience Consistency
 
