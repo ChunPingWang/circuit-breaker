@@ -60,11 +60,45 @@ Before implementation, verify alignment with project principles:
 
 ### Layer Responsibilities (Hexagonal Architecture)
 
-| Layer | Responsibilities |
-|-------|-----------------|
-| Domain | CircuitBreaker, MessageQueue, PendingMessage, Domain Events |
-| Application (Ports) | UseCase interfaces, Input/Output ports |
-| Infrastructure (Adapters) | Spring Controllers, JPA Repositories, HTTP Clients, Schedulers |
+| Layer | Responsibilities | Dependencies |
+|-------|-----------------|--------------|
+| Domain | CircuitBreaker, MessageQueue, PendingMessage, Domain Events | **無外部依賴** (純 Java) |
+| Application (Ports) | UseCase interfaces, Input/Output ports | → Domain |
+| Infrastructure (Adapters) | Spring Controllers, JPA Repositories, HTTP Clients, Schedulers | → Domain, → Application |
+
+### Dependency Direction (關鍵原則)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Infrastructure Layer                      │
+│  (Spring, JPA, WebClient, Schedulers)                       │
+│                           │                                  │
+│                           │ depends on                       │
+│                           ▼                                  │
+├─────────────────────────────────────────────────────────────┤
+│                    Application Layer                         │
+│  (Use Cases, Port Interfaces)                               │
+│                           │                                  │
+│                           │ depends on                       │
+│                           ▼                                  │
+├─────────────────────────────────────────────────────────────┤
+│                      Domain Layer                            │
+│  (Entities, Value Objects, Domain Services, Domain Events)  │
+│                                                              │
+│  ⚠️ Domain MUST NOT depend on outer layers                   │
+│  ⚠️ Domain MUST NOT import framework-specific code           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**依賴規則：**
+- ✅ Infrastructure → Application → Domain（外層依賴內層）
+- ❌ Domain → Application（禁止）
+- ❌ Domain → Infrastructure（禁止）
+- ❌ Application → Infrastructure（禁止）
+
+**Port 介面定義位置：**
+- Input Ports (Use Case 介面): 定義於 Application 層，由 Infrastructure 層實作呼叫
+- Output Ports (Repository, Gateway 介面): 定義於 **Domain 層**，由 Infrastructure 層實作
 
 ### Service Port Allocation
 
