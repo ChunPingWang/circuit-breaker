@@ -95,17 +95,17 @@ API 使用者可透過網頁介面瀏覽 API 規格，快速了解可用的端�
 開發人員可直接在文件介面中測試 API，驗證 API 行為而無需切換工具
 
 ### Independent Test Criteria
-- [ ] "Try it out" 按鈕可用
-- [ ] 可輸入請求參數並執行 API 呼叫
-- [ ] 回應狀態碼與內容正確顯示
-- [ ] 錯誤回應有清楚的錯誤訊息
+- [x] "Try it out" 按鈕可用
+- [x] 可輸入請求參數並執行 API 呼叫
+- [x] 回應狀態碼與內容正確顯示
+- [x] 錯誤回應有清楚的錯誤訊息
 
 ### Tasks
 
-- [ ] T025 [US2] Configure CORS for Swagger UI in mp-service if needed (mp-service/src/main/java/.../infrastructure/config/CorsConfig.java)
-- [ ] T026 [US2] Add example values to @Schema annotations for request parameters in mp-service DTOs
-- [ ] T027 [US2] Add example values to @Schema annotations for response fields in all DTOs
-- [ ] T028 [US2] Verify "Try it out" functionality works for all endpoints manually
+- [x] T025 [US2] Configure CORS for Swagger UI in mp-service if needed (不需要額外 CORS，同源請求)
+- [x] T026 [US2] Add example values to @Schema annotations for request parameters in mp-service DTOs
+- [x] T027 [US2] Add example values to @Schema annotations for response fields in all DTOs
+- [x] T028 [US2] Verify "Try it out" functionality works for all endpoints manually
 
 ---
 
@@ -115,16 +115,16 @@ API 使用者可透過網頁介面瀏覽 API 規格，快速了解可用的端�
 系統整合者可取得 API 規格的機器可讀格式，自動產生客戶端程式碼
 
 ### Independent Test Criteria
-- [ ] /v3/api-docs 回傳有效 JSON
-- [ ] /v3/api-docs.yaml 回傳有效 YAML
-- [ ] 規格包含所有端點的完整定義
+- [x] /v3/api-docs 回傳有效 JSON
+- [x] /v3/api-docs.yaml 回傳有效 YAML
+- [x] 規格包含所有端點的完整定義
 
 ### Tasks
 
-- [ ] T029 [US3] Verify /v3/api-docs returns valid OpenAPI 3.0 JSON for mp-service
-- [ ] T030 [US3] Verify /v3/api-docs returns valid OpenAPI 3.0 JSON for gbp-service
-- [ ] T031 [US3] Verify /v3/api-docs returns valid OpenAPI 3.0 JSON for gin-service
-- [ ] T032 [US3] Document API spec URLs in README or quickstart guide
+- [x] T029 [US3] Verify /v3/api-docs returns valid OpenAPI 3.0 JSON for mp-service
+- [x] T030 [US3] Verify /v3/api-docs returns valid OpenAPI 3.0 JSON for gbp-service
+- [x] T031 [US3] Verify /v3/api-docs returns valid OpenAPI 3.0 JSON for gin-service
+- [x] T032 [US3] Document API spec URLs in README or quickstart guide
 
 ---
 
@@ -135,13 +135,13 @@ API 使用者可透過網頁介面瀏覽 API 規格，快速了解可用的端�
 
 ### Tasks
 
-- [ ] T033 [P] Create SwaggerUiAccessTest.java in mp-service/src/test/java/.../integration/SwaggerUiAccessTest.java
-- [ ] T034 [P] Create SwaggerUiAccessTest.java in gbp-service/src/test/java/.../integration/SwaggerUiAccessTest.java
-- [ ] T035 [P] Create SwaggerUiAccessTest.java in gin-service/src/test/java/.../integration/SwaggerUiAccessTest.java
-- [ ] T036 [P] Create OpenApiSpecTest.java in mp-service/src/test/java/.../integration/OpenApiSpecTest.java
-- [ ] T037 [P] Create OpenApiSpecTest.java in gbp-service/src/test/java/.../integration/OpenApiSpecTest.java
-- [ ] T038 [P] Create OpenApiSpecTest.java in gin-service/src/test/java/.../integration/OpenApiSpecTest.java
-- [ ] T039 Run all integration tests and verify pass
+- [x] T033 [P] Create SwaggerUiAccessTest.java in mp-service/src/test/java/.../integration/SwaggerUiAccessTest.java
+- [x] T034 [P] Create SwaggerUiAccessTest.java in gbp-service/src/test/java/.../integration/SwaggerUiAccessTest.java
+- [x] T035 [P] Create SwaggerUiAccessTest.java in gin-service/src/test/java/.../integration/SwaggerUiAccessTest.java
+- [x] T036 [P] Create OpenApiSpecTest.java in mp-service/src/test/java/.../integration/OpenApiSpecTest.java
+- [x] T037 [P] Create OpenApiSpecTest.java in gbp-service/src/test/java/.../integration/OpenApiSpecTest.java
+- [x] T038 [P] Create OpenApiSpecTest.java in gin-service/src/test/java/.../integration/OpenApiSpecTest.java
+- [x] T039 Run all integration tests and verify pass
 
 ### Test Specifications
 
@@ -163,11 +163,11 @@ API 使用者可透過網頁介面瀏覽 API 規格，快速了解可用的端�
 
 ### Tasks
 
-- [ ] T040 Create application-prod.yml with swagger disabled for mp-service
-- [ ] T041 Create application-prod.yml with swagger disabled for gbp-service
-- [ ] T042 Create application-prod.yml with swagger disabled for gin-service
-- [ ] T043 Update README.md with Swagger UI URLs for each service
-- [ ] T044 Final manual verification of all three Swagger UIs
+- [x] T040 Create application-prod.yml with swagger disabled for mp-service
+- [x] T041 Create application-prod.yml with swagger disabled for gbp-service
+- [x] T042 Create application-prod.yml with swagger disabled for gin-service
+- [x] T043 Update README.md with Swagger UI URLs for each service
+- [x] T044 Final manual verification of all three Swagger UIs
 
 ---
 
@@ -231,11 +231,11 @@ Phase 1 + Phase 2 + Phase 3 (US1)
 | Phase 1: Setup | 5 | 5 | 0 |
 | Phase 2: Foundational | 6 | 6 | 0 |
 | Phase 3: US1 Browse | 13 | 13 | 0 |
-| Phase 4: US2 Test | 4 | 0 | 0 |
-| Phase 5: US3 Export | 4 | 0 | 0 |
-| Phase 6: Tests | 7 | 0 | 0 |
-| Phase 7: Polish | 5 | 0 | 0 |
-| **TOTAL** | **44** | **24** | **0** |
+| Phase 4: US2 Test | 4 | 4 | 0 |
+| Phase 5: US3 Export | 4 | 4 | 0 |
+| Phase 6: Tests | 7 | 7 | 0 |
+| Phase 7: Polish | 5 | 5 | 0 |
+| **TOTAL** | **44** | **44** | **0** |
 
 ---
 

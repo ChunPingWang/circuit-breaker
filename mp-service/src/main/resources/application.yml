@@ -13,10 +13,12 @@ spring:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
 
 # SpringDoc OpenAPI 配置
@@ -30,3 +32,17 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
     display-request-duration: true
+
+# 斷路器設定
+circuit-breaker:
+  failure-threshold: 3
+  success-threshold: 2
+  timeout-seconds: 5
+  retry-interval-seconds: 5
+
+# 服務位址
+services:
+  gbp-service:
+    url: http://localhost:8081
+  gin-service:
+    url: http://localhost:8082

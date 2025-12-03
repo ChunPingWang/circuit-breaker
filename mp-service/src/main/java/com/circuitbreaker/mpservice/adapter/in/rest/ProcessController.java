@@ -3,21 +3,34 @@ package com.circuitbreaker.mpservice.adapter.in.rest;
 import com.circuitbreaker.mpservice.adapter.in.rest.dto.ErrorResponse;
 import com.circuitbreaker.mpservice.adapter.in.rest.dto.ProcessResponse;
 import com.circuitbreaker.mpservice.adapter.in.rest.dto.StatusResponse;
+import com.circuitbreaker.mpservice.application.usecase.GetStatusUseCase;
+import com.circuitbreaker.mpservice.application.usecase.ProcessTimeUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+
 @Tag(name = "Process", description = "時間處理流程 API")
 @RestController
 @RequestMapping("/api")
 public class ProcessController {
+
+    private final ProcessTimeUseCase processTimeUseCase;
+    private final GetStatusUseCase getStatusUseCase;
+
+    public ProcessController(ProcessTimeUseCase processTimeUseCase, GetStatusUseCase getStatusUseCase) {
+        this.processTimeUseCase = processTimeUseCase;
+        this.getStatusUseCase = getStatusUseCase;
+    }
 
     @Operation(
         summary = "處理時間流程",
@@ -41,15 +54,30 @@ public class ProcessController {
         )
     })
     @GetMapping("/process")
-    public ResponseEntity<ProcessResponse> process() {
-        // TODO: 實作處理邏輯
+    public ResponseEntity<?> process() {
+        ProcessTimeUseCase.ProcessResult result = processTimeUseCase.process();
+
+        if (!result.success()) {
+            ErrorResponse error = new ErrorResponse(
+                "SERVICE_UNAVAILABLE",
+                result.message(),
+                Instant.now().toString()
+            );
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
+        }
+
         ProcessResponse response = new ProcessResponse(
-            true,
-            false,
-            "2025-12-03T10:30:00Z",
-            "Time processed successfully",
-            null
+            result.success(),
+            result.degraded(),
+            result.timeData(),
+            result.message(),
+            result.pendingCount()
         );
+
+        if (result.degraded()) {
+            return ResponseEntity.accepted().body(response);
+        }
+
         return ResponseEntity.ok(response);
     }
 
@@ -66,13 +94,15 @@ public class ProcessController {
     })
     @GetMapping("/status")
     public ResponseEntity<StatusResponse> status() {
-        // TODO: 實作狀態查詢邏輯
+        GetStatusUseCase.StatusResult result = getStatusUseCase.getStatus();
+
         StatusResponse response = new StatusResponse(
-            "CLOSED",
-            0,
-            true,
-            true
+            result.circuitState().name(),
+            result.pendingMessages(),
+            result.gbpServiceAvailable(),
+            result.ginServiceAvailable()
         );
+
         return ResponseEntity.ok(response);
     }
 }

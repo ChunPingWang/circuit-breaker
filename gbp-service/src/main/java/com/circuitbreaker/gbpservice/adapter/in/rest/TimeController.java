@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,8 @@ import java.time.Instant;
 @RestController
 @RequestMapping("/api")
 public class TimeController {
+
+    private static final Logger log = LoggerFactory.getLogger(TimeController.class);
 
     @Operation(
         summary = "取得當前時間",
@@ -32,10 +36,12 @@ public class TimeController {
     })
     @GetMapping("/time")
     public ResponseEntity<TimeResponse> getTime() {
-        TimeResponse response = new TimeResponse(
-            Instant.now().toString(),
-            "UTC"
-        );
+        String currentTime = Instant.now().toString();
+
+        // FR-1: 每次被呼叫時在 console 輸出時間日誌
+        log.info("Time requested - returning: {}", currentTime);
+
+        TimeResponse response = new TimeResponse(currentTime, "UTC");
         return ResponseEntity.ok(response);
     }
 }
