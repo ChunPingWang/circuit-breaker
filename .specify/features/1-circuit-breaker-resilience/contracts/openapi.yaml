@@ -1,0 +1,264 @@
+openapi: 3.0.3
+info:
+  title: Circuit Breaker Microservices API
+  description: 微服務斷路器韌性機制 API 規格
+  version: 1.0.0
+  contact:
+    name: Circuit Breaker Team
+
+servers:
+  - url: http://localhost:8080
+    description: mp-service (主服務)
+  - url: http://localhost:8081
+    description: gbp-service (時間查詢服務)
+  - url: http://localhost:8082
+    description: gin-service (時間接收服務)
+
+tags:
+  - name: mp-service
+    description: 主服務入口 API
+  - name: gbp-service
+    description: 時間查詢服務 API
+  - name: gin-service
+    description: 時間接收服務 API
+
+paths:
+  # ============================================
+  # mp-service APIs (Port 8080)
+  # ============================================
+  /api/process:
+    get:
+      tags:
+        - mp-service
+      summary: 處理時間流程
+      description: |
+        呼叫 gbp-service 取得時間，再傳遞至 gin-service。
+        若 gin-service 無法連線，資料會暫存並在恢復後補發。
+      operationId: processTime
+      responses:
+        '200':
+          description: 成功完成時間處理流程
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessResponse'
+              example:
+                success: true
+                degraded: false
+                timeData: "2025-12-03T10:30:00Z"
+                message: "Time processed successfully"
+        '202':
+          description: 服務降級 - 資料已暫存
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessResponse'
+              example:
+                success: true
+                degraded: true
+                timeData: "2025-12-03T10:30:00Z"
+                message: "Time data queued for later delivery"
+                pendingCount: 5
+        '503':
+          description: 服務不可用 (gbp-service 無法連線)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "SERVICE_UNAVAILABLE"
+                message: "gbp-service is not available"
+                timestamp: "2025-12-03T10:30:00Z"
+
+  /api/status:
+    get:
+      tags:
+        - mp-service
+      summary: 查詢服務狀態
+      description: 取得斷路器狀態與待傳送訊息數量
+      operationId: getStatus
+      responses:
+        '200':
+          description: 服務狀態資訊
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+              example:
+                circuitState: "CLOSED"
+                pendingMessages: 0
+                lastFailureAt: null
+
+  # ============================================
+  # gbp-service APIs (Port 8081)
+  # ============================================
+  /api/time:
+    get:
+      tags:
+        - gbp-service
+      summary: 取得當前時間
+      description: 回傳當前系統時間，並在 console 輸出日誌
+      operationId: getCurrentTime
+      responses:
+        '200':
+          description: 當前時間
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeResponse'
+              example:
+                timestamp: "2025-12-03T10:30:00Z"
+                timezone: "UTC"
+
+  # ============================================
+  # gin-service APIs (Port 8082)
+  # ============================================
+  /api/time:
+    post:
+      tags:
+        - gin-service
+      summary: 接收時間資料
+      description: 接收並處理時間資料
+      operationId: receiveTime
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeRequest'
+            example:
+              timestamp: "2025-12-03T10:30:00Z"
+              source: "gbp-service"
+      responses:
+        '200':
+          description: 時間資料已接收
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AckResponse'
+              example:
+                received: true
+                processedAt: "2025-12-03T10:30:01Z"
+        '400':
+          description: 無效的請求資料
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    # ============================================
+    # mp-service Schemas
+    # ============================================
+    ProcessResponse:
+      type: object
+      required:
+        - success
+        - degraded
+        - timeData
+        - message
+      properties:
+        success:
+          type: boolean
+          description: 請求是否成功處理
+        degraded:
+          type: boolean
+          description: 是否為降級模式（資料暫存）
+        timeData:
+          type: string
+          format: date-time
+          description: 從 gbp-service 取得的時間
+        message:
+          type: string
+          description: 處理結果訊息
+        pendingCount:
+          type: integer
+          description: 待傳送訊息數量（僅降級模式顯示）
+
+    StatusResponse:
+      type: object
+      required:
+        - circuitState
+        - pendingMessages
+      properties:
+        circuitState:
+          type: string
+          enum: [CLOSED, OPEN, HALF_OPEN]
+          description: 斷路器狀態
+        pendingMessages:
+          type: integer
+          description: 待傳送訊息數量
+        lastFailureAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: 最後一次失敗時間
+
+    # ============================================
+    # gbp-service Schemas
+    # ============================================
+    TimeResponse:
+      type: object
+      required:
+        - timestamp
+        - timezone
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: 當前時間 (ISO 8601 格式)
+        timezone:
+          type: string
+          description: 時區
+
+    # ============================================
+    # gin-service Schemas
+    # ============================================
+    TimeRequest:
+      type: object
+      required:
+        - timestamp
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: 時間資料 (ISO 8601 格式)
+        source:
+          type: string
+          description: 資料來源
+
+    AckResponse:
+      type: object
+      required:
+        - received
+        - processedAt
+      properties:
+        received:
+          type: boolean
+          description: 是否已接收
+        processedAt:
+          type: string
+          format: date-time
+          description: 處理完成時間
+
+    # ============================================
+    # Common Schemas
+    # ============================================
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - timestamp
+      properties:
+        error:
+          type: string
+          description: 錯誤代碼
+        message:
+          type: string
+          description: 錯誤訊息
+        timestamp:
+          type: string
+          format: date-time
+          description: 錯誤發生時間
